@@ -1,0 +1,95 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintStream;
+import java.io.Reader;
+import java.io.Writer;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
+
+public class chessQueue {
+
+	boolean isBlackTurn;//表示现在是不是轮到黑色
+	Reader r ;
+	Writer w ;
+	BufferedReader br ;
+	PrintStream ps;
+	public chessQueue(boolean isBlackTurn) {
+		super();
+		this.isBlackTurn = isBlackTurn;
+		this.init();
+	}
+	private void init() {
+		Socket socket;
+		try {
+			socket = new Socket("127.0.0.1", 7777);
+
+			InputStream is = socket.getInputStream();
+			OutputStream os = socket.getOutputStream();
+	
+			br = new BufferedReader(new InputStreamReader(is));
+			ps = new PrintStream(os);
+
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	//走一步白色
+	public void putWhite(String str) {
+		
+			while(isBlackTurn == true);
+			/*
+			{
+				try {
+					this.wait();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			this.notify();
+			*/
+			ps.print(str + "\n");
+		    ps.flush();
+		//	isBlackTurn = true;
+			System.out.println("走了一步白色棋子");
+		
+		}
+	
+	//走一步黑色,不是轮到黑色的话就等待
+	public void putBlack(String str) {
+		
+			while(isBlackTurn == false);
+			/*{
+				try {
+					this.wait();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			this.notify();
+			*/
+			ps.print(str + "\n");
+		    ps.flush();
+			System.out.println("走了一步黑色棋子");
+		//	isBlackTurn = false;
+		
+		
+	}
+	//返回是不是轮到黑色
+	public boolean isBlackTurn()
+	{
+		return isBlackTurn;
+	}
+	
+}
